@@ -15,7 +15,7 @@ Backend using CodeIgniter 4 for Money App web application. This application crea
 Clone the project
 
 ```bash
-  git clone https://github.com/Do-Good-Technology/api-money-app.git
+  git clone (link https)
 ```
 
 Go to the project directory
