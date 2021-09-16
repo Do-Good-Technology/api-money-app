@@ -38,6 +38,9 @@ $routes->resource('user');
 $routes->add('auth/register', 'Auth::register');
 $routes->add('auth/login', 'Auth::login');
 
+$routes->add('settings/edit-account', 'Settings::editAccount');
+$routes->add('settings/change-password', 'Settings::changePassword');
+
 $routes->add('home', 'Mix::home');
 $routes->add('add-new-wallet', 'Mix::addNewWallet');
 
