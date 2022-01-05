@@ -44,7 +44,7 @@ class Auth extends ResourceController
         }
     }
 
-    
+
     public function login()
     {
         $userModel = new UserModel();
@@ -68,6 +68,23 @@ class Auth extends ResourceController
             } else {
                 return $this->respond(['status' => 'failed', 'info' => 'email is correct, password is incorrect', 'id_user' => '', 'dataUser' => ""]);
             }
+        }
+    }
+
+    public function reAuth($auth)
+    {
+        $userModel = new UserModel();
+
+        $objAuth = json_decode($auth);
+
+        $dbUser = $userModel->find($objAuth->id_user);
+
+        $reHashPassword = hash('SHA512', md5($objAuth->hash_password_user));
+
+        if ($reHashPassword === $dbUser['password_user']) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
