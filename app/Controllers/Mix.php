@@ -5,13 +5,12 @@ namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 
 use App\Models\UserModel;
-
+use App\Controllers\Auth;
 
 class Mix extends ResourceController
 {
     protected function addTransaction()
     {
-
     }
 
     public function home()
@@ -21,50 +20,16 @@ class Mix extends ResourceController
 
     public function addNewWallet()
     {
-        $dataRequest = $this->request->getPost();
+        $auth = new Auth();
 
-        $this->addTransaction();
+        $authJsonString = '{ "id_user": "10", "email_user": "asd1@asd.asd","hash_password_user":"f5b3b9b303f5a0594272f99d191bbf45"}';
 
-        return $this->respond($dataRequest);
-    }
+        return $this->respond($auth->reAuth($authJsonString));
 
-    public function register()
-    {
-        date_default_timezone_set('asia/jakarta');
+        // $dataRequest = $this->request->getPost();
 
-        $userModel = new UserModel();
+        // $this->addTransaction();
 
-        $dataRequest = $this->request->getPost();
-
-        // * check if there is another email
-        if (count($userModel->where('email_user', $dataRequest['email_user'])->findAll()) > 0) {
-            return $this->respond(['status' => 'failed', 'info' => 'email already has registered']);
-        } else {
-            $data = $dataRequest;
-            $data['password_user'] = hash('SHA512', md5($dataRequest['password_user']));
-            $data['created_date_user'] = date("Y-m-d H:i:s");
-
-            if ($userModel->save($data)) {
-                $idUser = $userModel->getInsertID();
-                return $this->respond(['status' => 'success', 'info' => 'new account already registered', 'id_user' => $idUser, 'dataUser' => $data]);
-            }
-        }
-    }
-
-    public function login()
-    {
-        $userModel = new UserModel();
-
-        $dataRequest = $this->request->getPost();
-        $dataUserFromDatabase = $userModel->where('email_user', $dataRequest['email_user'])->findAll();
-        if (count($dataUserFromDatabase) == 0) {
-            return $this->respond(['status' => 'failed', 'info' => 'email is not registered', 'id_user' => "", 'dataAdmin' => ""]);
-        } else {
-            if (hash('SHA512', md5($dataRequest['password_user'])) == $dataUserFromDatabase[0]['password_user']) {
-                return $this->respond(['status' => 'success', 'info' => 'email & password are correct', 'id_user' => $dataUserFromDatabase[0]['id_user'], 'dataUser' => $dataUserFromDatabase[0]]);
-            } else {
-                return $this->respond(['status' => 'failed', 'info' => 'email is correct, password is incorrect', 'id_user' => $dataUserFromDatabase[0]['id_user'], 'dataUser' => ""]);
-            }
-        }
+        // return $this->respond($dataRequest);
     }
 }

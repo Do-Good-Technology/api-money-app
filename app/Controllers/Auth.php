@@ -6,7 +6,7 @@ use CodeIgniter\RESTful\ResourceController;
 
 use App\Models\AuthModel;
 use App\Models\UserModel;
-
+use stdClass;
 
 class Auth extends ResourceController
 {
@@ -26,12 +26,24 @@ class Auth extends ResourceController
             $data['password_user'] = hash('SHA512', md5($dataRequest['password_user']));
             $data['created_date_user'] = date("Y-m-d H:i:s");
 
+
             if ($userModel->save($data)) {
                 $idUser = $userModel->getInsertID();
-                return $this->respond(['status' => 'success', 'info' => 'new account already registered', 'id_user' => $idUser, 'dataUser' => $data]);
+
+                $auth = new stdClass();
+                $auth->id_user =  $idUser;
+                $auth->email_user = $dataRequest['email_user'];
+                $auth->hash_password_user = $dataRequest['password_user'];
+
+                return $this->respond([
+                    'status' => 'success',
+                    'info' => 'new account already registered',
+                    'auth' => $auth
+                ]);
             }
         }
     }
+
 
     public function login()
     {
@@ -43,10 +55,36 @@ class Auth extends ResourceController
             return $this->respond(['status' => 'failed', 'info' => 'email is not registered', 'id_user' => "", 'dataAdmin' => ""]);
         } else {
             if (hash('SHA512', md5($dataRequest['password_user'])) == $dataUserFromDatabase[0]['password_user']) {
-                return $this->respond(['status' => 'success', 'info' => 'email & password are correct', 'id_user' => $dataUserFromDatabase[0]['id_user'], 'dataUser' => $dataUserFromDatabase[0]]);
+                $auth = new stdClass();
+                $auth->id_user =  $dataUserFromDatabase[0]['id_user'];
+                $auth->email_user = $dataRequest['email_user'];
+                $auth->hash_password_user = $dataRequest['password_user'];
+
+                return $this->respond([
+                    'status' => 'success',
+                    'info' => 'email & password are correct',
+                    'auth' => $auth,
+                ]);
             } else {
-                return $this->respond(['status' => 'failed', 'info' => 'email is correct, password is incorrect', 'id_user' => $dataUserFromDatabase[0]['id_user'], 'dataUser' => ""]);
+                return $this->respond(['status' => 'failed', 'info' => 'email is correct, password is incorrect', 'id_user' => '', 'dataUser' => ""]);
             }
+        }
+    }
+
+    public function reAuth($auth)
+    {
+        $userModel = new UserModel();
+
+        $objAuth = json_decode($auth);
+
+        $dbUser = $userModel->find($objAuth->id_user);
+
+        $reHashPassword = hash('SHA512', md5($objAuth->hash_password_user));
+
+        if ($reHashPassword === $dbUser['password_user']) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
