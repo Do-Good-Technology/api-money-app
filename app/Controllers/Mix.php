@@ -22,14 +22,16 @@ class Mix extends ResourceController
     {
         $auth = new Auth();
 
-        $authJsonString = '{ "id_user": "10", "email_user": "asd1@asd.asd","hash_password_user":"f5b3b9b303f5a0594272f99d191bbf45"}';
+        $dataRequest = $this->request->getPost();
 
-        return $this->respond($auth->reAuth($authJsonString));
+        // $authJsonString = '{ "id_user": "10", "email_user": "asd1@asd.asd","hash_password_user":"f5b3b9b303f5a0594272f99d191bbf45"}';
+
+        return $this->respond($auth->reAuth($dataRequest['auth']));
+        // return $this->respond($dataRequest['auth']);
 
         // $dataRequest = $this->request->getPost();
 
         // $this->addTransaction();
 
-        // return $this->respond($dataRequest);
     }
 }

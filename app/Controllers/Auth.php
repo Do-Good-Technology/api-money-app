@@ -82,9 +82,14 @@ class Auth extends ResourceController
         $reHashPassword = hash('SHA512', md5($objAuth->hash_password_user));
 
         if ($reHashPassword === $dbUser['password_user']) {
-            return true;
+            $data = new stdClass();
+            $data->status = true;
+            $data->id_user = $objAuth->id_user;
+            return $data;
         } else {
-            return false;
+            $data = new stdClass();
+            $data->status = false;
+            return $data;
         }
     }
 }
