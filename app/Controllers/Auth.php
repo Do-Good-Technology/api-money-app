@@ -18,7 +18,6 @@ class Auth extends ResourceController
 
         $dataRequest = $this->request->getPost();
 
-        // * check if there is another email
         if (count($userModel->where('email_user', $dataRequest['email_user'])->findAll()) > 0) {
             return $this->respond(['status' => 'failed', 'info' => 'email already has registered']);
         } else {
@@ -82,9 +81,14 @@ class Auth extends ResourceController
         $reHashPassword = hash('SHA512', md5($objAuth->hash_password_user));
 
         if ($reHashPassword === $dbUser['password_user']) {
-            return true;
+            $data = new stdClass();
+            $data->status = true;
+            $data->id_user = $objAuth->id_user;
+            return $data;
         } else {
-            return false;
+            $data = new stdClass();
+            $data->status = false;
+            return $data;
         }
     }
 }

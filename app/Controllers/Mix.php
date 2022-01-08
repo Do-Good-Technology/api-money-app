@@ -6,6 +6,8 @@ use CodeIgniter\RESTful\ResourceController;
 
 use App\Models\UserModel;
 use App\Controllers\Auth;
+use App\Models\WalletModel;
+use stdClass;
 
 class Mix extends ResourceController
 {
@@ -20,16 +22,38 @@ class Mix extends ResourceController
 
     public function addNewWallet()
     {
-        $auth = new Auth();
+        date_default_timezone_set('asia/jakarta');
+        $authController = new Auth();
+        $walletModel = new WalletModel();
+        $message = new stdClass();
 
-        $authJsonString = '{ "id_user": "10", "email_user": "asd1@asd.asd","hash_password_user":"f5b3b9b303f5a0594272f99d191bbf45"}';
+        $dataRequest = $this->request->getPost();
+        $resultReAuth = $authController->reAuth($dataRequest['auth']);
 
-        return $this->respond($auth->reAuth($authJsonString));
+        if ($resultReAuth->status) {
+            $data = new stdClass();
+            $data->id_user = $resultReAuth->id_user;
+            $data->name_wallet = $dataRequest['walletName'];
+            $data->icon_wallet = $dataRequest['iconType'];
+            $data->nominal_wallet = $dataRequest['currentBalance'];
+            $data->type_wallet = $dataRequest['walletType'];
+            $data->is_report = $dataRequest['isReport'];
+            $data->created_date_wallet = date("Y-m-d H:i:s");
 
-        // $dataRequest = $this->request->getPost();
+            if ($walletModel->save($data)) {
+                $message->status = 'success';
+                $message->data = $data;
+                return $this->respond($message);
+            } else {
+                $message->status = 'failed';
+                return $this->respond($message);
+            }
 
-        // $this->addTransaction();
-
-        // return $this->respond($dataRequest);
+            return $this->respond($data);
+        } else {
+            $message->status = 'error';
+            $message->info = 'auth error';
+            return $this->respond($message);
+        }
     }
 }

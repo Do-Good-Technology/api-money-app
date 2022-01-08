@@ -44,6 +44,8 @@ $routes->add('settings/change-password', 'Settings::changePassword');
 $routes->add('home', 'Mix::home');
 $routes->add('add-new-wallet', 'Mix::addNewWallet');
 
+$routes->add('wallet/show-wallet-page', 'Wallet::showWalletPage');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
