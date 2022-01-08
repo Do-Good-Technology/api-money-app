@@ -18,7 +18,6 @@ class Auth extends ResourceController
 
         $dataRequest = $this->request->getPost();
 
-        // * check if there is another email
         if (count($userModel->where('email_user', $dataRequest['email_user'])->findAll()) > 0) {
             return $this->respond(['status' => 'failed', 'info' => 'email already has registered']);
         } else {
