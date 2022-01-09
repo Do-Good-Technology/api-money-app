@@ -13,6 +13,7 @@ class UserModel extends Model
         'name_user',
         'email_user',
         'password_user',
+        'total_balance_user',
         'created_date_user',
         'updated_date_user'
     ];
