@@ -2,17 +2,17 @@
 
 namespace App\Controllers;
 
+use App\Models\MixCustomModel;
 use App\Models\WalletCustomModel;
 use CodeIgniter\RESTful\ResourceController;
 
-use App\Models\WalletModel;
 use stdClass;
 
 class Wallet extends ResourceController
 {
     public function showWalletPage()
     {
-        $walletModel = new WalletModel();
+        $mixCustomModel = new MixCustomModel();
         $authController = new Auth();
         $walletCustomModel = new WalletCustomModel();
 
@@ -26,6 +26,7 @@ class Wallet extends ResourceController
             return $this->respond($message);
         }
 
+        $message->balanceTotal = $mixCustomModel->getTotalBalance($resultReAuth->id_user);
         $message->walletListData = $walletCustomModel->getWalletListData($resultReAuth->id_user);
 
         return $this->respond($message);

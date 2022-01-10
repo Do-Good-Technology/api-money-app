@@ -6,6 +6,7 @@ use CodeIgniter\RESTful\ResourceController;
 
 use App\Models\UserModel;
 use App\Controllers\Auth;
+use App\Models\MixCustomModel;
 use App\Models\TransactionModel;
 use App\Models\WalletModel;
 use stdClass;
@@ -22,14 +23,19 @@ class Mix extends ResourceController
         date_default_timezone_set('asia/jakarta');
         $trasactionModel = new TransactionModel();
         $userModel = new UserModel();
+        $mixCustomModel = new MixCustomModel();
 
         $dataTransaction->created_date_transaction = date("Y-m-d H:i:s");
         $trasactionModel->save($dataTransaction);
 
-        
+        $totalBalance = $mixCustomModel->getTotalBalance($dataTransaction->id_user);
+        $currentBalance = $totalBalance +  $dataTransaction->nominal_transaction;
+        // return $currentBalance;
 
         $dataUser = new stdClass();
         $dataUser->id_user = $dataTransaction->id_user;
+        $dataUser->total_balance_user = $currentBalance;
+        $userModel->save($dataUser);
     }
 
     public function addNewWallet()

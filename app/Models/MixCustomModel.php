@@ -8,19 +8,11 @@ class MixCustomModel extends Model
 {
     public function getTotalBalance($idUser)
     {
-        $sql = "Select total_balance
+        $sql = "Select total_balance_user
             from user
-            where {$idUser}";
+            where id_user = {$idUser}";
         $query = $this->db->query($sql);
-        return $query->getResult();
-    }
-    public function getWalletListData($idUser = null)
-    {
-        $sql = "Select * 
-            from wallet
-            where {$idUser}
-            order by name_wallet";
-        $query = $this->db->query($sql);
-        return $query->getResultArray();
+        $data = $query->getResult();
+        return $data[0]->total_balance_user;
     }
 }
