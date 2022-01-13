@@ -29,8 +29,12 @@ class Mix extends ResourceController
         $trasactionModel->save($dataTransaction);
 
         $totalBalance = $mixCustomModel->getTotalBalance($dataTransaction->id_user);
-        $currentBalance = $totalBalance +  $dataTransaction->nominal_transaction;
-        // return $currentBalance;
+        if ($dataTransaction->flow_transaction === 'income') {
+            $currentBalance = $totalBalance +  $dataTransaction->nominal_transaction;
+        }
+        if ($dataTransaction->flow_transaction === 'expense') {
+            $currentBalance = $totalBalance -  $dataTransaction->nominal_transaction;
+        }
 
         $dataUser = new stdClass();
         $dataUser->id_user = $dataTransaction->id_user;
