@@ -46,6 +46,8 @@ $routes->add('add-new-wallet', 'Mix::addNewWallet');
 
 $routes->add('wallet/show-wallet-page', 'Wallet::showWalletPage');
 
+$routes->add('transaction/add-transaction', 'Transaction::addTransaction');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
