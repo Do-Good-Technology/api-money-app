@@ -18,7 +18,7 @@ class Mix extends ResourceController
         return $this->respond("in home");
     }
 
-    public function addTransaction($dataTransaction)
+    public function addTransactionHelper($dataTransaction)
     {
         date_default_timezone_set('asia/jakarta');
         $trasactionModel = new TransactionModel();
@@ -73,7 +73,7 @@ class Mix extends ResourceController
                 $dataTransaction->note_transaction = "New {$data->name_wallet} Wallet";
                 $dataTransaction->date_transaction = date("Y-m-d H:i:s");
                 $dataTransaction->is_report = $dataRequest['isReport'];
-                $this->addTransaction($dataTransaction);
+                $this->addTransactionHelper($dataTransaction);
 
                 $message->status = 'success';
                 $message->data = $data;
