@@ -24,6 +24,7 @@ class Mix extends ResourceController
         $trasactionModel = new TransactionModel();
         $userModel = new UserModel();
         $mixCustomModel = new MixCustomModel();
+        $walletModel = new WalletModel();
 
         $dataTransaction->created_date_transaction = date("Y-m-d H:i:s");
         $trasactionModel->save($dataTransaction);
@@ -39,7 +40,22 @@ class Mix extends ResourceController
         $dataUser = new stdClass();
         $dataUser->id_user = $dataTransaction->id_user;
         $dataUser->total_balance_user = $currentBalance;
+        $dataUser->updated_date_user = date("Y-m-d H:i:s");
         $userModel->save($dataUser);
+
+        $currentNominalWallet = $mixCustomModel->getCurrentNominalWallet($dataTransaction->id_wallet);
+
+        if ($dataTransaction->flow_transaction === 'income') {
+            $afterNominalWallet = $currentNominalWallet +  $dataTransaction->nominal_transaction;
+        }
+        if ($dataTransaction->flow_transaction === 'expense') {
+            $afterNominalWallet = $currentNominalWallet -  $dataTransaction->nominal_transaction;
+        }
+        $dataWallet = new stdClass();
+        $dataWallet->id_wallet = $dataTransaction->id_wallet;
+        $dataWallet->nominal_wallet = $afterNominalWallet;
+        $dataWallet->updated_date_wallet = date("Y-m-d H:i:s");
+        $walletModel->save($dataWallet);
     }
 
     public function addNewWallet()
@@ -57,7 +73,7 @@ class Mix extends ResourceController
             $data->id_user = $resultReAuth->id_user;
             $data->name_wallet = $dataRequest['walletName'];
             $data->icon_wallet = $dataRequest['iconType'];
-            $data->nominal_wallet = $dataRequest['currentBalance'];
+            // $data->nominal_wallet = $dataRequest['currentBalance'];
             $data->type_wallet = $dataRequest['walletType'];
             $data->is_report = $dataRequest['isReport'];
             $data->created_date_wallet = date("Y-m-d H:i:s");

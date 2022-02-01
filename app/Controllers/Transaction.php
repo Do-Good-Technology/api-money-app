@@ -31,10 +31,7 @@ class Transaction extends ResourceController
         $dataTransaction->date_transaction = $dataRequest['dateTransaction'];
         $dataTransaction->is_report = $dataRequest['isReport'];
         $mixController->addTransactionHelper($dataTransaction);
-        // if ($mixController->addTransactionHelper($dataTransaction)) {
+
         return $this->respond($dataTransaction);
-        // }
-        // return $this->respond($mixController->addTransactionHelper($dataTransaction));
-        // return $this->respond($resultReAuth->id_user);
     }
 }
