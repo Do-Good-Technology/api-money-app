@@ -15,4 +15,14 @@ class MixCustomModel extends Model
         $data = $query->getResult();
         return $data[0]->total_balance_user;
     }
+
+    public function getCurrentNominalWallet($idWallet)
+    {
+        $sql = "Select nominal_wallet
+        from wallet
+        where id_wallet = {$idWallet}";
+        $query = $this->db->query($sql);
+        $data = $query->getResult();
+        return $data[0]->nominal_wallet;
+    }
 }
