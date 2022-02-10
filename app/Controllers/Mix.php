@@ -73,7 +73,7 @@ class Mix extends ResourceController
             $data->id_user = $resultReAuth->id_user;
             $data->name_wallet = $dataRequest['walletName'];
             $data->icon_wallet = $dataRequest['iconType'];
-            // $data->nominal_wallet = $dataRequest['currentBalance'];
+            $data->nominal_wallet = $dataRequest['currentBalance'];
             $data->type_wallet = $dataRequest['walletType'];
             $data->is_report = $dataRequest['isReport'];
             $data->created_date_wallet = date("Y-m-d H:i:s");
